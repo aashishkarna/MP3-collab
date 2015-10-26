@@ -7,13 +7,21 @@ import ca.ubc.ece.cpen221.mp3.staff.Vertex;
 
 public class AdjacencyListGraph implements Graph {
 
-	private final HashMap<Vertex, HashSet<Vertex> > vertexDownstreamList = new HashMap<Vertex, HashSet<Vertex> >();
-	private final HashMap<Vertex, HashSet<Vertex> > vertexUpstreamList = new HashMap<Vertex, HashSet<Vertex> >();
-//	private final LinkedList<Vertex> allVertices = new LinkedList<>();
+	private final HashMap<Vertex, HashSet<Vertex> > vertexDownstreamList; 
+	private final HashMap<Vertex, HashSet<Vertex> > vertexUpstreamList;
+	private final LinkedList<Vertex> allVertices = new LinkedList<>();
+	
+	
+	
+	public AdjacencyListGraph(){
+		this.vertexDownstreamList= new HashMap<Vertex, HashSet<Vertex> >();
+		this.vertexUpstreamList= new HashMap<Vertex, HashSet<Vertex> >();
+	}
 	
 	public void addVertex(Vertex v) {
-		vertexDownstreamList.put(v, new HashSet<Vertex>());
+		vertexDownstreamList.put(v, new HashSet<Vertex>() );
 		vertexUpstreamList.put(v, new HashSet<Vertex>() );
+		allVertices.add(v);
 		
 	}
 
@@ -46,6 +54,7 @@ public class AdjacencyListGraph implements Graph {
 		
 		List<Vertex> downstream = new LinkedList<>();
 		downstream.addAll(vertexDownstreamList.get(v));
+		
 		if(!vertexDownstreamList.get(v).isEmpty()){	
 			return Collections.unmodifiableList(downstream) ;
 		}else{
@@ -60,6 +69,7 @@ public class AdjacencyListGraph implements Graph {
 		
 		List<Vertex> upstream = new LinkedList<>();
 		upstream.addAll(vertexUpstreamList.get(v));
+		
 		if(!vertexUpstreamList.get(v).isEmpty()){	
 			return Collections.unmodifiableList(upstream) ;
 		}else{
@@ -69,9 +79,13 @@ public class AdjacencyListGraph implements Graph {
 
 	@Override
 	public List<Vertex> getVertices() {
-		List<Vertex> allVertices = new LinkedList<Vertex>();
-		allVertices.addAll(vertexUpstreamList.keySet());
-		return Collections.unmodifiableList(allVertices);
+		List<Vertex> vertices = new LinkedList<Vertex>();
+		vertices.addAll(allVertices);
+		
+		if(!vertices.isEmpty()){
+			return Collections.unmodifiableList(vertices);
+		}else{
+			return new LinkedList<Vertex>();
+		}
 	}
-	
 }
