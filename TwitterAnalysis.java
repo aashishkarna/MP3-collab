@@ -169,7 +169,12 @@ public class TwitterAnalysis {
                 outputWriter.newLine();
                 outputWriter.write("<result>");
                 outputWriter.newLine();
-                outputWriter.write(shortestDistance.toString());
+                if(shortestDistance == -1){
+                	outputWriter.write("No path available");
+                }else{
+                	outputWriter.write(shortestDistance.toString());
+                }
+                
                 outputWriter.newLine();
                 outputWriter.write("</result>");
                 outputWriter.newLine();
