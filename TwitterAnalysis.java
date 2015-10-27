@@ -51,7 +51,7 @@ public class TwitterAnalysis {
         FileInputStream twitterStream;        
         try{
             
-            twitterStream = new FileInputStream("testtwitter.txt");
+            twitterStream = new FileInputStream("twitter.txt");
         } catch(FileNotFoundException e){
             throw new RuntimeException(e);
         }

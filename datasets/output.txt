@@ -1,0 +1,20 @@
+Query: numRetweets a f
+<result>
+2
+</result>
+
+Query: numRetweets a g
+<result>
+3
+</result>
+
+Query: commonInfluencers b d
+<result>
+f
+
+</result>
+Query: numRetweets c g
+<result>
+No path available
+</result>
+
