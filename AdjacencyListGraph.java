@@ -145,7 +145,7 @@ public class AdjacencyListGraph implements Graph {
 	/**
 	 * Returns a list of all the existing Vertices in the graph
 	 * 
-	 * @return: a list of all vertices in the graph
+	 * @return: a list of all existing vertices in the graph
 	 * 
 	 */
 	@Override
