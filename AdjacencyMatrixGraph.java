@@ -42,7 +42,8 @@ public class AdjacencyMatrixGraph implements Graph {
     }
 
     /**
-     * @param Vertex v1 and v2, the start and end of the edge respectively
+     * @param v1 the start vertex of the edge
+     * @param v2, the end vertex of the edge
      * @requires v1 and v2 are vertices in the matrix
      * @modifies Adds edge from v1 to v2 in the matrix
      */
@@ -53,7 +54,8 @@ public class AdjacencyMatrixGraph implements Graph {
     }
 
     /**
-     * @param Vertex v1 and v2, to be checked for an edge from the former to the latter
+     * @param v1 start vertex of edge to be checked for existence
+     * @param v2 end vertex of edge to be checked for exixtence
      * @requires v1 and v2 must be vertices in the matrix
      * @return a boolean value of whether there is an edge from v1 to v2
      */
@@ -64,7 +66,7 @@ public class AdjacencyMatrixGraph implements Graph {
     }
 
     /**
-     * @param Vertex v, whose downstream vertices are to be obtained
+     * @param  v, Vertex whose downstream vertices are to be obtained
      * @requires v is a Vertex in the matrix
      * @return List<Vertex> consisting of all v's downstream vertices
      */
@@ -83,7 +85,7 @@ public class AdjacencyMatrixGraph implements Graph {
     }
 
     /**
-     * @param Vertex v, whose upstream vertices are to be obtained
+     * @param v, Vertex whose upstream vertices are to be obtained
      * @requires v is a Vertex in the matrix
      * @return List<Vertex> consisting of all v's upstream vertices
      */
