@@ -29,11 +29,13 @@ public class Algorithms {
 		if (a.equals(b)) {
 			return 0;
 		} else {
+			try{
 			distance = searcherDFS(graph, a, b);
 			return distance;
+			}catch(NullPointerException e){
+				throw new IllegalArgumentException();
+			}
 		}
-
-	
 	}
 
 	
@@ -79,19 +81,17 @@ public class Algorithms {
 			vertexStack.push(v);
 			while (!vertexStack.empty()) {
 				Vertex w = vertexStack.pop();
-				branch.add(w);
+				
 				if (!discoveredVertices.contains(w)) {
 					discoveredVertices.add(w);
-
+					branch.add(w);
 					for (Vertex z : g.getDownstreamNeighbors(w)) {
 						vertexStack.add(z);
 					}
 				}
-
 			}
 			listSet.add(branch);
 		}
-
 		return listSet;
 	}
 
@@ -108,10 +108,10 @@ public class Algorithms {
 			vertexQueue.add(v);
 			while (!vertexQueue.isEmpty()) {
 				Vertex w = vertexQueue.poll();
-				branch.add(w);
+				
 				if (!discoveredVertices.contains(w)) {
 					discoveredVertices.add(w);
-
+					branch.add(w);
 					for (Vertex z : g.getDownstreamNeighbors(w)) {
 						vertexQueue.add(z);
 					}
@@ -125,52 +125,38 @@ public class Algorithms {
 	}
 
 	public static int searcherDFS(Graph g, Vertex a, Vertex b) {
-//		Set<List<Vertex>> listSet = new HashSet<>();
-//		List<Vertex> allVertices = new ArrayList<>();
-		int counter = 0;
 
-//		allVertices = g.getVertices();
+		int counter = 0;
 
 		Queue<Vertex> vertexQueue = new LinkedList<Vertex>();
 		Queue<Vertex> downstreamQueue = new LinkedList<Vertex>();
 		List<Vertex> discoveredVertices = new ArrayList<>();
 
 		vertexQueue.add(a);
-		while (!vertexQueue.contains(b)) {
-			// Vertex w = vertexQueue.poll();
-			// branch.add(w);
+		while (!vertexQueue.contains(b)||(!vertexQueue.isEmpty()&&!downstreamQueue.isEmpty())) {
 
 			for (Vertex z : vertexQueue) {
 				if (!discoveredVertices.contains(z)) {
 					discoveredVertices.add(z);
 					downstreamQueue.addAll(g.getDownstreamNeighbors(z));
-
 				}
-
 			}
 			vertexQueue.clear();
 			counter++;
 			if (downstreamQueue.contains(b)) {
 				break;
-			}
-
-			else {
-				// Vertex x = downstreamQueue.poll();
-				// branch.add(w);
+			}else {
 
 				for (Vertex y : downstreamQueue) {
 					if (!discoveredVertices.contains(y)) {
 						discoveredVertices.add(y);
 						vertexQueue.addAll(g.getDownstreamNeighbors(y));
-
 					}
 				}
 				downstreamQueue.clear();
 				counter++;
 			}
-
 		}
-		// listSet.add(branch);
 
 		return counter;
 
