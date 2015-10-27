@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.Scanner;
 import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
 
 import ca.ubc.ece.cpen221.mp3.graph.AdjacencyListGraph;
+import ca.ubc.ece.cpen221.mp3.graph.AdjacencyMatrixGraph;
 import ca.ubc.ece.cpen221.mp3.graph.Algorithms;
 import ca.ubc.ece.cpen221.mp3.staff.Graph;
 import ca.ubc.ece.cpen221.mp3.staff.Vertex;
@@ -32,6 +34,7 @@ public class TwitterAnalysis {
       String outputFileName = scanner.nextLine();
       
       grapher();
+      System.out.println(twitter.getVertices());
       System.out.println("graph done");
       LinkedList<String[]> queryList = reader(inputFileName);
       System.out.println("reader done");
@@ -40,11 +43,15 @@ public class TwitterAnalysis {
                 
     }
     
+    /**
+     * @modifies Graph twitter to contain the vertices and edges as represented in the twitter.txt file
+     * @throws FileNotFoundException
+     */
     private static void grapher() {
         FileInputStream twitterStream;        
         try{
             
-            twitterStream = new FileInputStream("datasets/twitter.txt");
+            twitterStream = new FileInputStream("datasets/testtwitter.txt");
         } catch(FileNotFoundException e){
             throw new RuntimeException(e);
         }
@@ -66,19 +73,26 @@ public class TwitterAnalysis {
                     twitter.addVertex(w);
                 }
                 if(!twitter.edgeExists(v, w)){
-                    twitter.addEdge(v, w);
-                }
-                twitterReader.close();
-            }
+                    twitter.addEdge(v, w);                    
+                }               
+            }twitterReader.close();            
         }catch(Exception e){
             
         }
     }
     
+    /**
+     * 
+     * @param fileName a String containing the file name to be read, ending with .txt
+     * @return LinkedList<String[]> of the query type, vertices a and b and "?" if written
+     * in the correct format, that is "queryType a b ?" where each array of strings is unique
+     * @throws FileNotFoundException
+     */
     private static LinkedList<String[]> reader(String fileName) {
 
         
         FileInputStream queryStream;
+        LinkedList<String> unique = new LinkedList<>();
         LinkedList<String[]> queryList = new LinkedList<>();
         try {
             queryStream = new FileInputStream(fileName);
@@ -90,18 +104,18 @@ public class TwitterAnalysis {
             BufferedReader queryReader = new BufferedReader(new InputStreamReader(queryStream));
             String line;
             while((line = queryReader.readLine()) != null) {
-                String[] blocks = line.split(" ");
+                if(!unique.contains(line)){
+                	unique.add(line);
+                	String[] blocks = line.split(" ");
                 // blocks[0] is the query type
                 // blocks[1] is userA
                 // blocks[2] is userB
                 // blocks[3] must be "?" to be considered
-                if(blocks[3].equals("?")) {
-                    queryList.add(blocks);
-                    System.out.println(blocks[0]);
-                    System.out.println(blocks[1]);
-                    System.out.println(blocks[2]);
-                    System.out.println(blocks[3]);
+               
+                	if(blocks[3].equals("?")) {
+                		queryList.add(blocks);                    
                 }
+              }
             }
             queryReader.close();
             queryStream.close();
@@ -112,31 +126,69 @@ public class TwitterAnalysis {
         return queryList;
     }
     
+    /**
+     * 
+     * @param queryList a LinkedLIst<String[]> containing the query type, the two vertices and the "?"
+     * @param outputFileName a String containing the name of the file to be written to
+     * @throws IOException
+     */
     private static void query(LinkedList<String[]> queryList, String outputFileName) throws IOException {
-        int counter = 0;
+        
+    	OutputStream outputStream = new FileOutputStream(outputFileName);
+        BufferedWriter outputWriter = new BufferedWriter (new OutputStreamWriter(outputStream));
         for(String[] stringArray: queryList) {
-           counter++;
-           System.out.println(counter);
+          
+        	
             Vertex a = new Vertex(stringArray[1]);
             Vertex b = new Vertex(stringArray[2]);
-            if(stringArray[0].equals("commonInfluencers")) {
+            String test = stringArray[0];
+            
+            if(test.equals("commonInfluencers")) {
                 ArrayList<Vertex> commonAB = (ArrayList<Vertex>) Algorithms.commonDownstreamVertices(twitter, a, b);
+                String result = new String("Query: " + test + " " + a.getLabel() + " " + b.getLabel() );
+                
+                outputWriter.write(result);
+                outputWriter.newLine();
+                outputWriter.write("<result>");
                 
                 for(Vertex commonDown: commonAB) {
-                    writer(outputFileName, commonDown.toString());
-                    System.out.println(commonDown);
+                	outputWriter.newLine();
+                	outputWriter.write(commonDown.toString());
+                	outputWriter.newLine();
                 }
-            }
-            if(stringArray[0].equals("numRetweets")) {
+                
+                outputWriter.write("\n</result>");
+                outputWriter.newLine();
+                
+            }else if(test.equals("numRetweets")) {
+            	
                 Integer shortestDistance = Algorithms.shortestDistance(twitter, a, b);
-                writer(outputFileName, shortestDistance.toString());
+                String result = new String("Query: " + test + " " + a.getLabel() + " " + b.getLabel() );
+                
+                outputWriter.write(result);
+                outputWriter.newLine();
+                outputWriter.write("<result>");
+                outputWriter.newLine();
+                outputWriter.write(shortestDistance.toString());
+                outputWriter.newLine();
+                outputWriter.write("</result>");
+                outputWriter.newLine();
+                outputWriter.newLine();
+                
             }
-        }
+        }outputWriter.close();
     }
     
+    /**
+     * 
+     * @param outputFileName a String containing the name of the file to be written to
+     * @param toWrite a String that is to be written to the output file
+     * @throws IOException
+     */
     private static void writer(String outputFileName, String toWrite) throws IOException {
-        FileOutputStream outputStream = new FileOutputStream(outputFileName);
-        Writer outputWriter = new OutputStreamWriter(outputStream);
+        
+    	OutputStream outputStream = new FileOutputStream(outputFileName);
+        BufferedWriter outputWriter = new BufferedWriter (new OutputStreamWriter(outputStream));
         outputWriter.write(toWrite);
         outputWriter.close();
     }
