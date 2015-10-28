@@ -154,10 +154,10 @@ public class TwitterAnalysis {
                 for(Vertex commonDown: commonAB) {
                 	outputWriter.newLine();
                 	outputWriter.write(commonDown.toString());
-                	outputWriter.newLine();
                 }
-                
-                outputWriter.write("\n</result>");
+                outputWriter.newLine();
+                outputWriter.write("</result>");
+                outputWriter.newLine();
                 outputWriter.newLine();
                 
             }else if(test.equals("numRetweets")) {
