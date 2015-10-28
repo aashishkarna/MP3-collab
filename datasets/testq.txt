@@ -1,0 +1,7 @@
+numRetweets a f ?
+numRetweets a g ?
+commonInfluencers b d ?
+wrongQueryType a b ?
+commonInfluencers a b
+numRetweets c g ?
+commonInfluencers b d !

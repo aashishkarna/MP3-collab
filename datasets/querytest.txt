@@ -1,0 +1,5 @@
+numRetweets 10416 37772220 ?
+commonInfuencers 12052632 99765600 ?
+wrongQueryType 12052632 99765600 ?
+numRetweets 10416 37772220
+
